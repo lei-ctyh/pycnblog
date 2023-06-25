@@ -7,12 +7,7 @@ from server_proxy import server
 
 
 def find_md_img(md):
-
-    # 对于markdown中代码块的内容无须做正则匹配处理
-    pattern = r"```.*?```"
-    md = re.sub(pattern, "", md, flags=re.DOTALL)
-
-    # 查找markdown中的图片，排除网络图片(不用上传)
+    """查找markdown中的图片，排除网络图片(不用上传)"""
     images = re.findall("\\!\\[.*?\\]\\((.*?)\\)", md)
     images += re.findall('<img src="(.*?)"', md)
     images = [i for i in images if not re.match("((http(s?))|(ftp))://.*", i)]
