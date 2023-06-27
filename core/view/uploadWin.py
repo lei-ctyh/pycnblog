@@ -1,3 +1,4 @@
+import os
 import tkinter
 import windnd
 from tkinter import *
@@ -18,7 +19,7 @@ class UploadWin:
     主窗体
     """
     window = None
-
+    image = None
     header = None
 
     body = None
@@ -53,15 +54,14 @@ class UploadWin:
         frame.place(x=0, y=0, width=660, height=100)
 
     def add_body(self):
-        frame = tkinter.Frame(self.window, padx=20, pady=0)
-        # 创建一个Canvas，设置其背景色为白色
-        cv = Canvas(frame, bg='white')
-
-        # 定义云朵的坐标和颜色
-        cloud_coords = (50, 50, 200, 150)
-        cloud_color = "#D3D3D3"  # 灰色
-        # 绘制云朵
-        cv.create_oval(cloud_coords, fill=cloud_color)
-        cv.pack(fill="both", expand=True)
+        # 获取当前可执行文件的路径
+        current_dir =os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        # 构造资源文件的路径
+        resource_file_path = os.path.join(current_dir, 'resources', 'R.gif')
+        self.image = tkinter.PhotoImage(file=resource_file_path)
+        frame = tkinter.Frame(self.window, padx=20, pady=0, )
+        label = tkinter.Label(
+            frame, image=self.image)
+        label.pack(fill="both", expand=True)
 
         frame.place(x=0, y=100, width=660, height=200)
