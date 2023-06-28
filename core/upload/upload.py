@@ -5,9 +5,9 @@ import sys
 import xmlrpc
 from pydoc import html
 
-from core import conf
-from core import upload_img, find_md_img, replace_md_img
-from core import server
+from core.upload.config_loader import conf
+from core.upload.img_transfer import upload_img, find_md_img, replace_md_img
+from core.upload.server_proxy import server
 
 if len(sys.argv) == 1:
     print('请输入markdown文件路径,带双引号哦')
