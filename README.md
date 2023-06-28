@@ -19,6 +19,7 @@ python3
 `git clone git@github.com:dongfanger/pycnblog.git`
 
 `pip install pyyaml`
+`pip install windnd`
 
 # 配置
 
