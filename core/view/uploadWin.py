@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter
 import webbrowser
 
@@ -14,8 +15,10 @@ def dragged_files(files):
     :return:
     """
     for file in files:
-        print(file.decode('utf-8'))
-
+        # 执行文件并传递参数
+        sys.argv = ['../upload/upload.py', file]
+        exec(open('C://code//pycnblog//core//view//settingWin.py', encoding='utf-8').read())
+        # 执行文件并传递参数
 
 def open_link(event):
     webbrowser.open("https://www.baidu.com")
@@ -31,9 +34,6 @@ def resource_path(filename, level=2):
     return resource_file_path
 
 
-
-
-
 class UploadWin:
     """
     主窗体
@@ -46,6 +46,8 @@ class UploadWin:
     body_image = None
 
     cogs_image = None
+
+    setting_win = None
 
     def __init__(self):
         self.window = tkinter.Tk()
@@ -60,8 +62,9 @@ class UploadWin:
         self.window.mainloop()
 
     def open_setting_page(self):
-        setting_win = SettingWin(self.window)
-        setting_win.show()
+        if self.setting_win is None:
+            self.setting_win = SettingWin(self.window)
+        self.setting_win.show()
 
     def add_header(self):
         frame = tkinter.Frame(self.window, padx=20, pady=20)
