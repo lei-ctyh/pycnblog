@@ -1,9 +1,9 @@
 import os
 import re
 
-from config_loader import conf
-from mime import mime_mapping
-from server_proxy import server
+from core.upload.config_loader import conf
+from core.upload.mime import mime_mapping
+from core.upload.server_proxy import server
 
 
 def find_md_img(md):

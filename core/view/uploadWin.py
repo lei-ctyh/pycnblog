@@ -6,6 +6,7 @@ import webbrowser
 import windnd
 
 from core.view.settingWin import SettingWin
+from core.upload.upload import upload_file
 
 
 def dragged_files(files):
@@ -15,13 +16,11 @@ def dragged_files(files):
     :return:
     """
     for file in files:
-        # 执行文件并传递参数
-        sys.argv = ['../upload/upload.py', file]
-        exec(open('C://code//pycnblog//core//view//settingWin.py', encoding='utf-8').read())
-        # 执行文件并传递参数
+        upload_file(file.decode('GBK'))
 
-def open_link(event):
-    webbrowser.open("https://www.baidu.com")
+
+def open_link():
+    webbrowser.open("https://www.cnblogs.com/aaalei/p/17503371.html")
 
 
 def resource_path(filename, level=2):

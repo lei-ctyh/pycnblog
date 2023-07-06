@@ -1,6 +1,6 @@
 import xmlrpc.client
 
-from core import conf
+from core.upload.config_loader import conf
 
 blog_url = conf["blog_url"].strip()
 try:

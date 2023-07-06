@@ -43,7 +43,7 @@ def create_labeled_entry(parent, label_text, posY, is_pwd=None):
 
 def create_labeled_combobox(parent, label_text, posY, tuples=None, current=0):
     frame = create_labeled(parent, label_text, posY)
-    combobox = ttk.Combobox(frame, font=("Arial", 14),state="readonly" )
+    combobox = ttk.Combobox(frame, font=("Arial", 14), state="readonly")
     if tuples is None:
         combobox['values'] = ()  # 将选项列表设置为空
     else:

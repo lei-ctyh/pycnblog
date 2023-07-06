@@ -1,30 +1,18 @@
 import asyncio
+import html
 import os
 import ssl
 import sys
 import xmlrpc
-from pydoc import html
+
 
 from core.upload.config_loader import conf
 from core.upload.img_transfer import upload_img, find_md_img, replace_md_img
 from core.upload.server_proxy import server
 
-if len(sys.argv) == 1:
-    print('请输入markdown文件路径,带双引号哦')
-    exit(-1)
 
-md_path = sys.argv[0]  # markdown路径
-dir_name = os.path.dirname(md_path)
-
-title, _ = os.path.splitext(os.path.basename(md_path))  # 文件名作为博客标题
-
-net_images = []  # 图片上传后url
-image_count = 1  # 图片计数
-
-
-def get_image_url(t):
+def get_image_url(t, net_images, image_count):
     """回调，获取url"""
-    global image_count
     url = t.result()['url']
     print(f'第{image_count}张图片上传成功,url:{url}')
     net_images.append(url)
@@ -32,34 +20,56 @@ def get_image_url(t):
 
 
 def cancel_ssh_authentication():  # 取消全局ssl认证
+
     ssl._create_default_https_context = ssl._create_unverified_context
 
 
-async def upload_tasks(local_images_):
+async def upload_tasks(local_images_, dir_name, net_images, image_count):
     tasks = []
     for li in local_images_:
         image_full_path = os.path.join(dir_name, li)
         task = asyncio.create_task(upload_img(image_full_path))
-        task.add_done_callback(get_image_url)
+        task.add_done_callback(lambda t: get_image_url(t, net_images, image_count))
         tasks.append(task)
     await asyncio.gather(*tasks)
 
 
-if __name__ == '__main__':
+def upload_file(file_path):
+    # markdown路径
+    md_path = file_path
+    # 所在文件夹
+    dir_name = os.path.dirname(md_path)
+    # 博客标题
+    title, _ = os.path.splitext(os.path.basename(md_path))  # 文件名作为博客标题
+    # 图片上传后url
+    net_images = []
+    # 图片计数
+    image_count = 1
+
     cancel_ssh_authentication()
     with open(md_path, encoding='utf-8') as f:
         md = f.read()
         print(f'markdown读取成功:{md_path}')
         local_images = find_md_img(md)
+        print(f'查寻到以下本地图片: '.join(local_images))
 
         if local_images:  # 有本地图片，异步上传
-            asyncio.run(upload_tasks(local_images))
+            asyncio.run(upload_tasks(local_images, dir_name, net_images, image_count))
             image_mapping = dict(zip(local_images, net_images))
             md = replace_md_img(md_path, image_mapping)
         else:
             print('无需上传图片')
 
-        post = dict(description=md, title=title, categories=['[Markdown]'] + conf["categories"])
+        post = dict(
+            description=md,
+            title=title,
+            categories=['[Markdown]'] + conf["categories"],
+            mt_keywords="你好",
+            mt_excerpt="我是一段摘要"
+        )
+
+
+
         recent_posts = server.metaWeblog.getRecentPosts(conf["blog_id"], conf["username"], conf["password"], 99)
         # 获取所有标题，需要处理HTML转义字符
         recent_posts_titles = [html.unescape(recent_post['title']) for recent_post in recent_posts]
