@@ -19,7 +19,7 @@ def dragged_files(files):
         upload_file(file.decode('GBK'))
 
 
-def open_link():
+def open_link(event):
     webbrowser.open("https://www.cnblogs.com/aaalei/p/17503371.html")
 
 

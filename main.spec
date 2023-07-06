@@ -8,7 +8,7 @@ a = Analysis(
     ['main.py'],
     pathex=[],
     binaries=[],
-    datas=[('C:\\workspace\\code\\egoTrip\\pycnblog\\resources\\R.gif', 'resources')],
+    datas=[('C:\\code\\pycnblog\\resources\\R.gif', 'resources'),('C:\\code\\pycnblog\\resources\\Snipaste_2023-06-27_21-58-49.png', 'resources')],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},

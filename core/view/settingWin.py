@@ -91,9 +91,9 @@ class SettingWin:
         self.component.append({"blog_id": create_labeled_entry(self.frame, "账号", 50)})
         self.component.append({"blog_url": create_labeled_entry(self.frame, "链接", 90)})
         self.component.append({"password": create_labeled_entry(self.frame, "密码", 130, "*")})
-        self.component.append({"categories": create_labeled_combobox(self.frame, "分类", 170)})
-        self.component.append({"username": create_labeled_entry(self.frame, "用户名", 210)})
-        self.component.append({"publish": create_labeled_combobox(self.frame, "是否发布", 250, (True, False), 1)})
+        # self.component.append({"categories": create_labeled_combobox(self.frame, "分类", 170)})
+        self.component.append({"username": create_labeled_entry(self.frame, "用户名", 170)})
+        self.component.append({"publish": create_labeled_combobox(self.frame, "是否发布", 210, (True, False), 1)})
 
         # 初始化选择框的值
         conf_path = os.path.join(tempfile.gettempdir(), 'pycnblog', "config.yaml")
