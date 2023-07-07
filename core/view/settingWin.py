@@ -2,7 +2,7 @@ import os.path
 import tempfile
 import tkinter
 from tkinter import ttk
-
+from core.util.log_util import log
 import yaml
 
 
@@ -88,15 +88,20 @@ class SettingWin:
             width=1, height=50
         )
         close_button.place(x=270, y=0, width=30, height=30)
+        log.info("配置页标题以及按钮加载完毕")
+
         self.component.append({"blog_id": create_labeled_entry(self.frame, "账号", 50)})
         self.component.append({"blog_url": create_labeled_entry(self.frame, "链接", 90)})
         self.component.append({"password": create_labeled_entry(self.frame, "密码", 130, "*")})
         # self.component.append({"categories": create_labeled_combobox(self.frame, "分类", 170)})
         self.component.append({"username": create_labeled_entry(self.frame, "用户名", 170)})
         self.component.append({"publish": create_labeled_combobox(self.frame, "是否发布", 210, (True, False), 1)})
+        log.info("参数设置输入框加载完毕")
 
         # 初始化选择框的值
         conf_path = os.path.join(tempfile.gettempdir(), 'pycnblog', "config.yaml")
+        log.info("config.yaml 所在路径"+conf_path)
+
         if os.path.exists(conf_path):
             with open(conf_path, "r", encoding="utf-8") as f:
                 conf_yaml = yaml.load(f.read(), Loader=yaml.FullLoader)
@@ -107,11 +112,13 @@ class SettingWin:
                         comp[key].delete(0, tkinter.END)  # 先清空输入框中的内容
                         if not conf_yaml[key] is None:
                             comp[key].insert(0, conf_yaml[key])  # 将新的值插入到输入框中
+            log.info("文件存在,成功回写数据到输入框")
 
     def show(self):
         self.frame.place(x=330, y=0, width=330, height=400)
 
     def on_entry_complete(self):
+        log.info("------------ 参数保存 ------------")
         temp_dir = os.path.join(tempfile.gettempdir(), 'pycnblog')
         # 检查目录是否存在
         if not os.path.exists(temp_dir):
@@ -119,9 +126,11 @@ class SettingWin:
         yaml_path = os.path.join(temp_dir, "config.yaml")
         # 检查文件是否存在
         if not os.path.exists(yaml_path):
+            log.info("config.yaml文件不存在")
             # 创建新文件
             with open(yaml_path, "w", encoding='utf-8') as file:
                 file.write("# pycnblog 配置文件")
+            log.info("config.yaml创建成功")
 
         config_yaml = {}
         for comp in self.component:
@@ -130,5 +139,6 @@ class SettingWin:
 
         with open(yaml_path, "w", encoding="utf-8") as f:
             f.write(yaml.dump(config_yaml))
+        log.info("参数写入文件成功")
         # 关闭配置窗口 隐藏起来
         self.frame.place_forget()

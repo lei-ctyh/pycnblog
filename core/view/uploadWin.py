@@ -1,15 +1,16 @@
 import os
-import sys
 import tkinter
 import webbrowser
 
 import windnd
 
-from core.view.settingWin import SettingWin
 from core.upload.upload import upload_file
+from core.util.log_util import log
+from core.view.settingWin import SettingWin
 
 
 def dragged_files(files):
+    log.info("------------ 拖入文件,开始上传文件 ------------")
     """
     文件拖入窗口之后, 触发的回调函数
     :param files:
@@ -54,13 +55,17 @@ class UploadWin:
         self.window.geometry("660x408")
         self.window.resizable(False, False)
         self.add_header()
+        log.info("头部提示信息加载完毕")
         self.add_body()
+        log.info("上传面板主题加载完毕")
         self.add_footer()
+        log.info("版权声明, 参数设置按钮加载完毕")
 
     def show(self):
         self.window.mainloop()
 
     def open_setting_page(self):
+        log.info("------------ 打开参数配置页面 ------------")
         if self.setting_win is None:
             self.setting_win = SettingWin(self.window)
         self.setting_win.show()

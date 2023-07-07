@@ -1,11 +1,13 @@
 import html
 import os
+import tempfile
 import xmlrpc.client
 
 import yaml
 
 from core.upload.mime import mime_mapping
 from core.upload.post import Post
+from core.util.log_util import log
 
 
 class WeblogClient:
@@ -20,7 +22,7 @@ class WeblogClient:
 
     def __init__(self):
         # 初始化yaml数据
-        config_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "../../config.yaml")
+        config_path = os.path.join(os.path.join(tempfile.gettempdir(), 'pycnblog'), "config.yaml")
         with open(config_path, "r", encoding="utf-8") as f:
             conf = yaml.load(f.read(), Loader=yaml.FullLoader)
 
@@ -40,6 +42,7 @@ class WeblogClient:
                 print('请检查blog_url,应该是这个URL地址没设置对')
 
     def upload_post(self, post):
+        log.info("文章上传开始")
         # 所有的文章
         recent_posts = self.client.getRecentPosts(self.blog_id, self.username, self.password, 99)
         is_edit_post = False
@@ -47,6 +50,7 @@ class WeblogClient:
             if post.title == html.unescape(recent_post['title']):
                 update_post = Post(post_dict=recent_post)
                 update_post.description = post.description
+                log.info("更新一篇文章")
 
                 try:
                     self.client.editPost(update_post.postid, self.username, self.password, update_post, self.publish)
@@ -58,8 +62,10 @@ class WeblogClient:
                         raise fault
                 is_edit_post = True
 
-        if ~is_edit_post:
+        if not is_edit_post:
+            log.info("新增一篇文章")
             self.client.newPost(self.blog_url, self.username, self.password, post.to_dict(), self.publish)
+        log.info("文章上传成功")
 
     async def upload_img(self, img_path):
         """上传图片"""

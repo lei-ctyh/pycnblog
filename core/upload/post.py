@@ -21,15 +21,16 @@ class Post:
     mt_keywords = ""
 
     def __init__(self, title="", description="", categories=None, mt_keywords="", post_dict=None):
-        if categories is None:
-            categories = []
         if post_dict is not None:
             for key, value in post_dict.items():
                 setattr(self, key, value)
-        self.title = title
-        self.description = description
-        self.categories = categories
-        self.mt_keywords = mt_keywords
+        else:
+            if categories is None:
+                categories = []
+            self.title = title
+            self.description = description
+            self.categories = ['[Markdown]'] + categories
+            self.mt_keywords = mt_keywords
 
     def to_dict(self):
         return vars(self)
