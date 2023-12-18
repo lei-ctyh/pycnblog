@@ -27,11 +27,11 @@ class WeblogClient:
             conf = yaml.load(f.read(), Loader=yaml.FullLoader)
 
         # 初始化上传服务承参数
-        self.blog_url = conf["blog_url"].strip()
-        self.blog_id = conf["blog_id"].strip()
-        self.username = conf["username"].strip()
-        self.password = conf["password"].strip()
-        self.publish = conf["publish"]
+        self.blog_url = "https://rpc.cnblogs.com/metaweblog/aaalei"
+        self.blog_id = "aaalei"
+        self.username = "2468341590@qq.com"
+        self.password = "95529D103516E0289554BD76D87CBABC72811A92F37AEA3ABE3B8266D3A1B5F9"
+        self.publish = True
 
         try:
             server = xmlrpc.client.ServerProxy(self.blog_url)

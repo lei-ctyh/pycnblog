@@ -1,6 +1,8 @@
 import asyncio
 import os
 import re
+import urllib
+from urllib import parse
 
 from core.upload.weblog_client import WeblogClient
 from core.util.log_util import log
@@ -62,6 +64,10 @@ async def upload_img_tasks(local_images_, dir_name, net_images, image_count):
     tasks = []
     for li in local_images_:
         image_full_path = os.path.join(dir_name, li)
+        # C:\\Users\\hjsoft\\Nutstore\\1\\我的坚果云\\obsidian\\学习\\assets/ORECAL19C安装/Pasted%20image%2020231107104952.png
+        # os.sep
+        image_full_path = image_full_path.replace("\\", "/").replace("/", os.sep)
+        image_full_path = urllib.parse.unquote(image_full_path)
         task = asyncio.create_task(WeblogClient().upload_img(image_full_path))
         task.add_done_callback(lambda t: get_image_url(t, net_images, image_count))
         tasks.append(task)
